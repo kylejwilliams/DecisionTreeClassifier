@@ -2,6 +2,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+// Data values by pos:
+// 0: Alternate location? 			{ 0 = false, 1 = true }
+// 1: Is there a bar? 				{ 0 = false; 1 = true }
+// 2: Is it a Friday or Saturday?	{ 0 = false; 1 = true }
+// 3: Am I very hungry?				{ 0 = false; 1 = true }
+// 4: How many patrons?				{ 0 = none; 1 = some; 2 = full }
+// 5: Price range?					{ 0 = $; 1 = $$; 2 = $$$ }
+// 6: Is it raining?				{ 0 = false; 1 = true;
+// 7: Do I have a reservation?		{ 0 = false; 1 = true;
+// 8: Type of food?					{ 0 = French; 1 = Thai; 2 = Burger; 3 = Italian }
+// 9: Estimated wait time?			{ 0 = 0-10; 1 = 10-30; 2 = 30-60; 3 = >60 }
+
+
 //None = 0
 //Some = 1
 //Full = 2
@@ -19,6 +33,7 @@ import java.util.List;
 //10-30 = 1
 //30-60 = 2
 //> 60  = 3
+
 
 public class Sample {
 	FileHandler fh = null;;
