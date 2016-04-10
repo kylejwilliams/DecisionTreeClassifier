@@ -8,6 +8,14 @@ public class FileHandler {
 	
 	String[] linesInFile = {};
 	
+	public FileHandler(String filename) {
+		try {
+			linesInFile = openFile(filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String[] openFile(String path) throws IOException {
 		
 		FileReader fr = new FileReader(path);
@@ -46,10 +54,12 @@ public class FileHandler {
 				if (curPos == pos) return word;
 				word = "";
 			} 
-			else word.concat(String.valueOf(line.charAt(i)));
+			else word += line.charAt(i);
 		}
 		
-		return "No word found"; // generic error
+		curPos++; // to grab the last word in the line
+		if (curPos == pos) return word; 
+		else return "No word found"; // generic error
 	}
 	
 	public int getNumWords(String line) {
