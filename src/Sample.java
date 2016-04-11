@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // Data values by pos:
 // 0: Alternate location? 			{ 0 = false, 	1 = true 							}
@@ -98,6 +99,33 @@ public class Sample {
 			splitList.add(membersWithFeatureEqualThree);
 		
 		return splitList;
+	}
+	
+	public double IGOnSplit(List<List<HashMap<Integer, Integer>>> sampleList, int feature) {
+		double informationGain = 0.0;
+		
+		// IG(T, a) = H(T) - sum(abs(x in T | x = v))/abs(T)) * H(x in T | x = v)
+		// H(T):= -sum(P(x)*log(2, P(x))
+		// P(X) = count(x | x = v)/size(X)
+	
+		return informationGain;
+	}
+	
+	public double informationEntropy(List<List<HashMap<Integer, Integer>>> sampleList) {
+		double entropy = 0.0;
+		
+		int totalData = 0;
+		for (List<HashMap<Integer, Integer>> list : sampleList) {
+			totalData += list.size();
+		}
+		
+		for (List<HashMap<Integer, Integer>> list : sampleList) {
+			double prob = (double)(list.size())/totalData;
+			if (prob == 0.0) entropy += 0.0;
+			else entropy += prob * Math.log10(prob) / Math.log10(2);
+		}
+
+		return entropy * (-1);
 	}
 	
 }
