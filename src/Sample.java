@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 // Data values by pos:
 // 0: Alternate location? 			{ 0 = false, 	1 = true 							}
 // 1: Is there a bar? 				{ 0 = false; 	1 = true 							}
@@ -45,14 +44,16 @@ public class Sample {
 	}
 	
 	public void createData() {
-		for (int i = 1; i < totalData; i++) { // elem 1 is first instance of actual data
+		for (int i = 0; i < totalData; i++) { // elem 1 is first instance of actual data
 			HashMap<Integer, Integer> m = new HashMap<Integer, Integer>();
-			String curLine = fileData[i];
+			String curLine = fileData[i + 1];
 			
 			
 			for (int j = 0; j < numDecisionVariables; j++) {
-				int dataValue = Integer.valueOf(fh.getWordAt(curLine, j));
-				m.put(j, dataValue);
+				int dataValue = 0;
+				dataValue = Integer.valueOf(fh.getWordAt(curLine, j));
+				if (j == numDecisionVariables - 1) m.put(0, dataValue);
+				else m.put(j + 1, dataValue);
 			}
 			
 			data.add(m);
@@ -67,4 +68,36 @@ public class Sample {
 			System.out.println(i + ":\t" + data.get(i));
 		}
 	}
+	
+	public boolean belongsTo(HashMap<Integer, Integer> sample, int feature) {
+		return sample.containsKey(feature);
+		
+		
+	}
+	
+	public List<List<HashMap<Integer, Integer>>> split(List<HashMap<Integer, Integer>> sampleList, int feature) {
+		List<HashMap<Integer, Integer>> membersWithFeatureTrue = new ArrayList<HashMap<Integer, Integer>>();
+		List<HashMap<Integer, Integer>> membersWithFeatureFalse = new ArrayList<HashMap<Integer, Integer>>();
+		//The following two are to represent the features with more than two options
+		List<HashMap<Integer, Integer>> membersWithFeatureEqualTwo = new ArrayList<HashMap<Integer, Integer>>();
+		List<HashMap<Integer, Integer>> membersWithFeatureEqualThree = new ArrayList<HashMap<Integer, Integer>>();
+		
+		for (int i = 0; i < sampleList.size(); i++) {
+			if (sampleList.get(i).get(feature) == 0) membersWithFeatureFalse.add(sampleList.get(i));
+			else if (sampleList.get(i).get(feature) == 1) membersWithFeatureTrue.add(sampleList.get(i));
+			else if (sampleList.get(i).get(feature) == 2) membersWithFeatureEqualTwo.add(sampleList.get(i));
+			else if (sampleList.get(i).get(feature) == 3) membersWithFeatureEqualThree.add(sampleList.get(i));
+		}
+		
+		List<List<HashMap<Integer, Integer>>> splitList = new ArrayList<>();
+		splitList.add(membersWithFeatureFalse);
+		splitList.add(membersWithFeatureTrue);
+		//if (!membersWithFeatureEqualTwo.isEmpty()) 
+			splitList.add(membersWithFeatureEqualTwo);
+		//if (!membersWithFeatureEqualThree.isEmpty()) 
+			splitList.add(membersWithFeatureEqualThree);
+		
+		return splitList;
+	}
+	
 }
