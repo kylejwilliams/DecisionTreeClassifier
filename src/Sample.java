@@ -98,15 +98,13 @@ public class Sample {
 		List<List<HashMap<Integer, Integer>>> splitList = new ArrayList<>();
 		splitList.add(membersWithFeatureFalse);
 		splitList.add(membersWithFeatureTrue);
-		//if (!membersWithFeatureEqualTwo.isEmpty()) 
-			splitList.add(membersWithFeatureEqualTwo);
-		//if (!membersWithFeatureEqualThree.isEmpty()) 
-			splitList.add(membersWithFeatureEqualThree);
+		splitList.add(membersWithFeatureEqualTwo); 
+		splitList.add(membersWithFeatureEqualThree);
 		
 		return splitList;
 	}
 	
-	public double IGOnSplit(List<HashMap<Integer, Integer>> sampleList, int feature) {
+	public double informationGainOnSplit(List<HashMap<Integer, Integer>> sampleList, int feature) {
 		double informationGain = 0.0;
 		double entropyBeforeSplit = 0.0;
 		double entropyAfterSplit = 0.0;
@@ -126,6 +124,8 @@ public class Sample {
 		List<List<HashMap<Integer, Integer>>> sampleAfterSplit = split(sampleList, feature);
 		entropyAfterSplit = informationEntropy(sampleAfterSplit);
 	
+		System.out.println(feature + ": " + (entropyAfterSplit - entropyBeforeSplit));
+		
 		return entropyAfterSplit - entropyBeforeSplit;
 	}
 	

@@ -18,13 +18,6 @@ public class Main {
 		Sample sample = new Sample(new FileHandler(filename));
 		sample.displayData();
 		
-//		for (int i = 0; i < sample.numDecisionVariables; i++) {
-//			List<List<HashMap<Integer, Integer>>> l = sample.split(sample.data, i);
-//			System.out.println(sample.informationEntropy(l));
-//		}
-		
-		double informationGain = sample.IGOnSplit(sample.data, 9);
-		
 		sc.close();
 	}
 
