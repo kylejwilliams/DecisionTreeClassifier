@@ -90,6 +90,11 @@ public class Sample {
 			else if (sampleList.get(i).get(feature) == 3) membersWithFeatureEqualThree.add(sampleList.get(i));
 		}
 		
+		for (HashMap<Integer, Integer> h : membersWithFeatureTrue) h.remove(feature);
+		for (HashMap<Integer, Integer> h : membersWithFeatureFalse) h.remove(feature);
+		for (HashMap<Integer, Integer> h : membersWithFeatureEqualTwo) h.remove(feature);
+		for (HashMap<Integer, Integer> h : membersWithFeatureEqualThree) h.remove(feature);
+		
 		List<List<HashMap<Integer, Integer>>> splitList = new ArrayList<>();
 		splitList.add(membersWithFeatureFalse);
 		splitList.add(membersWithFeatureTrue);
@@ -101,14 +106,27 @@ public class Sample {
 		return splitList;
 	}
 	
-	public double IGOnSplit(List<List<HashMap<Integer, Integer>>> sampleList, int feature) {
+	public double IGOnSplit(List<HashMap<Integer, Integer>> sampleList, int feature) {
 		double informationGain = 0.0;
+		double entropyBeforeSplit = 0.0;
+		double entropyAfterSplit = 0.0;
+		List<HashMap<Integer, Integer>> trueSamples = new ArrayList<HashMap<Integer, Integer>>();
+		List<HashMap<Integer, Integer>> falseSamples = new ArrayList<HashMap<Integer, Integer>>();
 		
-		// IG(T, a) = H(T) - sum(abs(x in T | x = v))/abs(T)) * H(x in T | x = v)
-		// H(T):= -sum(P(x)*log(2, P(x))
-		// P(X) = count(x | x = v)/size(X)
+		for (HashMap<Integer, Integer> sample : sampleList) {
+			if (sample.get(0) == 0) falseSamples.add(sample);
+			else if (sample.get(0) == 1) trueSamples.add(sample);
+		}
+		
+		List<List<HashMap<Integer, Integer>>> sampleBeforeSplit = new ArrayList<List<HashMap<Integer, Integer>>>();
+		sampleBeforeSplit.add(falseSamples);
+		sampleBeforeSplit.add(trueSamples);
+		entropyBeforeSplit = informationEntropy(sampleBeforeSplit);
+		
+		List<List<HashMap<Integer, Integer>>> sampleAfterSplit = split(sampleList, feature);
+		entropyAfterSplit = informationEntropy(sampleAfterSplit);
 	
-		return informationGain;
+		return entropyAfterSplit - entropyBeforeSplit;
 	}
 	
 	public double informationEntropy(List<List<HashMap<Integer, Integer>>> sampleList) {
