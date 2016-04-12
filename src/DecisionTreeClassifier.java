@@ -29,10 +29,16 @@ public class DecisionTreeClassifier {
 	public Tree<List<HashMap<Integer, Integer>>> buildTree(List<HashMap<Integer, Integer>> data) {
 		Tree<List<HashMap<Integer, Integer>>> classifier = new Tree<List<HashMap<Integer, Integer>>>(data);
 		double bestAttribute = 0.0;
-		
+		int key = 0;
 		for (int attribute : data.get(1).keySet()) {
-			sample.informationGainOnSplit(data, attribute);
+			double ig = sample.informationGainOnSplit(data, attribute);
+			if (ig > bestAttribute) {
+				bestAttribute = ig;
+				key = attribute;
+			}
 		}
+		
+		List<List<HashMap<Integer, Integer>>> parent = sample.split(sample.data, key);
 		
 		return classifier;
 	}
