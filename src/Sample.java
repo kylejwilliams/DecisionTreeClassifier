@@ -76,18 +76,21 @@ public class Sample {
 		
 	}
 	
+	// http://stackoverflow.com/questions/1884889/iterating-over-and-removing-from-a-map
+	// check here for iterating and removing
 	public List<List<HashMap<Integer, Integer>>> split(List<HashMap<Integer, Integer>> sampleList, int feature) {
+		List<HashMap<Integer, Integer>> sampleListCopy = new ArrayList<HashMap<Integer, Integer>>(sampleList);
 		List<HashMap<Integer, Integer>> membersWithFeatureTrue = new ArrayList<HashMap<Integer, Integer>>();
 		List<HashMap<Integer, Integer>> membersWithFeatureFalse = new ArrayList<HashMap<Integer, Integer>>();
 		//The following two are to represent the features with more than two options
 		List<HashMap<Integer, Integer>> membersWithFeatureEqualTwo = new ArrayList<HashMap<Integer, Integer>>();
 		List<HashMap<Integer, Integer>> membersWithFeatureEqualThree = new ArrayList<HashMap<Integer, Integer>>();
 		
-		for (int i = 0; i < sampleList.size(); i++) {
-			if (sampleList.get(i).get(feature) == 0) membersWithFeatureFalse.add(sampleList.get(i));
-			else if (sampleList.get(i).get(feature) == 1) membersWithFeatureTrue.add(sampleList.get(i));
-			else if (sampleList.get(i).get(feature) == 2) membersWithFeatureEqualTwo.add(sampleList.get(i));
-			else if (sampleList.get(i).get(feature) == 3) membersWithFeatureEqualThree.add(sampleList.get(i));
+		for (int i = 0; i < sampleListCopy.size(); i++) {
+			if (sampleListCopy.get(i).get(feature) == 0) membersWithFeatureFalse.add(sampleListCopy.get(i));
+			else if (sampleListCopy.get(i).get(feature) == 1) membersWithFeatureTrue.add(sampleListCopy.get(i));
+			else if (sampleListCopy.get(i).get(feature) == 2) membersWithFeatureEqualTwo.add(sampleListCopy.get(i));
+			else if (sampleListCopy.get(i).get(feature) == 3) membersWithFeatureEqualThree.add(sampleListCopy.get(i));
 		}
 		
 		for (HashMap<Integer, Integer> h : membersWithFeatureTrue) h.remove(feature);
@@ -111,7 +114,9 @@ public class Sample {
 		List<HashMap<Integer, Integer>> trueSamples = new ArrayList<HashMap<Integer, Integer>>();
 		List<HashMap<Integer, Integer>> falseSamples = new ArrayList<HashMap<Integer, Integer>>();
 		
-		for (HashMap<Integer, Integer> sample : sampleList) {
+		List<HashMap<Integer, Integer>> sl = new ArrayList<>(sampleList);
+		
+		for (HashMap<Integer, Integer> sample : sl) {
 			if (sample.get(0) == 0) falseSamples.add(sample);
 			else if (sample.get(0) == 1) trueSamples.add(sample);
 		}
@@ -121,12 +126,13 @@ public class Sample {
 		sampleBeforeSplit.add(trueSamples);
 		entropyBeforeSplit = informationEntropy(sampleBeforeSplit);
 		
-		List<List<HashMap<Integer, Integer>>> sampleAfterSplit = split(sampleList, feature);
+		List<List<HashMap<Integer, Integer>>> sampleAfterSplit = split(sl, feature);
 		entropyAfterSplit = informationEntropy(sampleAfterSplit);
 	
-		System.out.println(feature + ": " + (entropyAfterSplit - entropyBeforeSplit));
+		informationGain = entropyAfterSplit - entropyBeforeSplit;
+		System.out.println(feature + ": " + informationGain);
 		
-		return entropyAfterSplit - entropyBeforeSplit;
+		return informationGain;
 	}
 	
 	public double informationEntropy(List<List<HashMap<Integer, Integer>>> sampleList) {

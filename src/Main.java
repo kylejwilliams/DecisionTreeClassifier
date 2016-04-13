@@ -18,6 +18,13 @@ public class Main {
 		Sample sample = new Sample(new FileHandler(filename));
 		sample.displayData();
 		
+		for (int i = 0; i < sample.numDecisionVariables; i++) {
+			System.out.println(sample.informationGainOnSplit(sample.data, i));
+		}
+		
+//		DecisionTreeClassifier dtc = new DecisionTreeClassifier(sample);
+//		dtc.buildTree(sample.data);
+		
 		sc.close();
 	}
 

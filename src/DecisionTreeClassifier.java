@@ -27,14 +27,15 @@ public class DecisionTreeClassifier {
 	}
 	
 	public Tree<List<HashMap<Integer, Integer>>> buildTree(List<HashMap<Integer, Integer>> data) {
+		List<HashMap<Integer, Integer>> dataCopy = new ArrayList<HashMap<Integer, Integer>>(data);
 		Tree<List<HashMap<Integer, Integer>>> classifier = new Tree<List<HashMap<Integer, Integer>>>(data);
 		double bestAttribute = 0.0;
 		int key = 0;
-		for (int attribute : data.get(1).keySet()) {
-			double ig = sample.informationGainOnSplit(data, attribute);
+		for ( int i = 0; i < sample.numDecisionVariables; i++) {
+			double ig = sample.informationGainOnSplit(dataCopy, dataCopy.get(0).get(i));
 			if (ig > bestAttribute) {
 				bestAttribute = ig;
-				key = attribute;
+				key = i;
 			}
 		}
 		
