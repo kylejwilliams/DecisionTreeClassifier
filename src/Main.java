@@ -23,7 +23,9 @@ public class Main {
 		for (Integer i : sample.data.get(0).keySet())
 			attributes.add(i);
 		attributes.remove(0);
-		dtc.buildTree(sample.data, 0, attributes);
+		
+		Node<List<HashMap<Integer, Integer>>> root = dtc.buildTree(sample.data, 0, attributes);
+		root.printPreorder(root);
 		
 		sc.close();
 	}

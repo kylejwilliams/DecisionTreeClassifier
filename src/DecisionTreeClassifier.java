@@ -3,36 +3,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Node<T> {
-	public T data = null;
-	public Node<T> parent = null;
-	public List<Node<T>> children = new ArrayList<Node<T>>();
-	public boolean label = false;
-	public int parentAttribute = 1;
-
-	public Node() {
-		this.data = data;
-	}
-
-	public Node(T data, Node<T> parent) {
-		this.data = data;
-		this.parent = parent;
-	}
-
-	public List<Node<T>> getChildren() {
-		return children;
-	}
-
-	public void addChild(Node<T> child) {
-		child.parent = parent;
-		this.children.add(child);
-	}
-
-	public T getData() {
-		return this.data;
-	}
-}
-
 public class DecisionTreeClassifier {
 	Sample sample;
 	ArrayList<Integer> usedKeys = new ArrayList<Integer>();
@@ -44,7 +14,7 @@ public class DecisionTreeClassifier {
 	public Node<List<HashMap<Integer, Integer>>> buildTree(
 			List<HashMap<Integer, Integer>> data, int targetAttribute,
 			ArrayList<Integer> attributes) {
-		Node<List<HashMap<Integer, Integer>>> root = new Node<List<HashMap<Integer, Integer>>>();
+		Node<List<HashMap<Integer, Integer>>> root = new Node<List<HashMap<Integer, Integer>>>(data);
 
 		int numFalse = 0;
 		int numTrue = 0;
@@ -89,7 +59,7 @@ public class DecisionTreeClassifier {
 					else if (h.get(targetAttribute) == 1)
 						nt++;
 				}
-				Node<List<HashMap<Integer, Integer>>> n = new Node<List<HashMap<Integer, Integer>>>();
+				Node<List<HashMap<Integer, Integer>>> n = new Node<List<HashMap<Integer, Integer>>>(child);
 
 				if (nt > nf)
 					n.label = true;
@@ -97,11 +67,14 @@ public class DecisionTreeClassifier {
 					n.label = false;
 				node.addChild(n);
 			} else {
-				Node<List<HashMap<Integer, Integer>>> n = new Node<List<HashMap<Integer, Integer>>>();
+				Node<List<HashMap<Integer, Integer>>> n = new Node<List<HashMap<Integer, Integer>>>(child);
 
 				ArrayList<Integer> newAttributes = new ArrayList<>();
-				for (Integer key : node.data.get(0).keySet())
+				for (Integer key : node.data.get(0).keySet()) {
 					newAttributes.add(key);
+					newAttributes.remove(0);
+				}
+					
 
 				n = buildTree(node.data, targetAttribute, newAttributes);
 				node.addChild(n);
@@ -110,6 +83,22 @@ public class DecisionTreeClassifier {
 
 		return root;
 	}
+	
+	public void displayTree(Node<List<HashMap<Integer, Integer>>> root) {
+		System.out.println("PARENT: " + root.data);
+	}
+	
+    public void print(String prefix, boolean isTail, Node<List<HashMap<Integer, Integer>>> node) {
+        System.out.println(prefix + (isTail ? "└── " : "├── ") + node.data);
+        for (int i = 0; i < node.children.size() - 1; i++) {
+            print(prefix + (isTail ? "    " : "│   "), false, node.children.get(i));
+        }
+        if (node.children.size() > 0) {
+            print(prefix + (isTail ?"    " : "│   "), true, node.children.get(node.children.size() - 1));
+        }
+    }
+}
+	
 
 	// ID3 (Examples, Target_Attribute, Attributes)
 	// Create a root node for the tree
@@ -133,4 +122,3 @@ public class DecisionTreeClassifier {
 	// Target_Attribute, Attributes – {A})
 	// End
 	// Return Root
-}
