@@ -32,17 +32,12 @@ public class Node<T> {
 	}
 	
 	public void printPreorder(Node<List<HashMap<Integer, Integer>>> root) {
-		printPreOrderRec(root);
-		System.out.println("");
-	}
-	
-	private void printPreOrderRec(Node<List<HashMap<Integer, Integer>>> currRoot) {
-		if (currRoot == null) {
+		if (root == null) {
 			return;
 		}
-		System.out.println(currRoot.data);
-		for (Node<List<HashMap<Integer, Integer>>> n : currRoot.getChildren())
-			printPreOrderRec(n);
+		System.out.println(root.data);
+		for (Node<List<HashMap<Integer, Integer>>> n : root.getChildren())
+			printPreorder(n);
+		System.out.println("");
 	}
-	
 }
