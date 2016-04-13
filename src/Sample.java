@@ -76,13 +76,16 @@ public class Sample {
 		
 	}
 	
-	// http://stackoverflow.com/questions/1884889/iterating-over-and-removing-from-a-map
-	// check here for iterating and removing
 	public List<List<HashMap<Integer, Integer>>> split(List<HashMap<Integer, Integer>> sampleList, int feature) {
-		List<HashMap<Integer, Integer>> sampleListCopy = new ArrayList<HashMap<Integer, Integer>>(sampleList);
+		
+		// create a deep copy of the original list
+		List<HashMap<Integer, Integer>> sampleListCopy = new ArrayList<HashMap<Integer, Integer>>(sampleList.size());
+		for (HashMap<Integer, Integer> h : sampleList)
+			sampleListCopy.add((HashMap<Integer, Integer>)h.clone());
+		
 		List<HashMap<Integer, Integer>> membersWithFeatureTrue = new ArrayList<HashMap<Integer, Integer>>();
 		List<HashMap<Integer, Integer>> membersWithFeatureFalse = new ArrayList<HashMap<Integer, Integer>>();
-		//The following two are to represent the features with more than two options
+		//The following two are to represent the features with more than two options, such as the restaurant example in the lecture notes
 		List<HashMap<Integer, Integer>> membersWithFeatureEqualTwo = new ArrayList<HashMap<Integer, Integer>>();
 		List<HashMap<Integer, Integer>> membersWithFeatureEqualThree = new ArrayList<HashMap<Integer, Integer>>();
 		
@@ -93,17 +96,16 @@ public class Sample {
 			else if (sampleListCopy.get(i).get(feature) == 3) membersWithFeatureEqualThree.add(sampleListCopy.get(i));
 		}
 		
-		for (HashMap<Integer, Integer> h : membersWithFeatureTrue) h.remove(feature);
-		for (HashMap<Integer, Integer> h : membersWithFeatureFalse) h.remove(feature);
-		for (HashMap<Integer, Integer> h : membersWithFeatureEqualTwo) h.remove(feature);
-		for (HashMap<Integer, Integer> h : membersWithFeatureEqualThree) h.remove(feature);
-		
 		List<List<HashMap<Integer, Integer>>> splitList = new ArrayList<>();
 		splitList.add(membersWithFeatureFalse);
 		splitList.add(membersWithFeatureTrue);
 		splitList.add(membersWithFeatureEqualTwo); 
 		splitList.add(membersWithFeatureEqualThree);
 		
+		for (List<HashMap<Integer, Integer>> l : splitList)
+			for (HashMap<Integer, Integer> h : l) 
+				h.remove(feature);
+			
 		return splitList;
 	}
 	
@@ -130,7 +132,6 @@ public class Sample {
 		entropyAfterSplit = informationEntropy(sampleAfterSplit);
 	
 		informationGain = entropyAfterSplit - entropyBeforeSplit;
-		System.out.println(feature + ": " + informationGain);
 		
 		return informationGain;
 	}
