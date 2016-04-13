@@ -97,10 +97,10 @@ public class Sample {
 		}
 		
 		List<List<HashMap<Integer, Integer>>> splitList = new ArrayList<>();
-		splitList.add(membersWithFeatureFalse);
-		splitList.add(membersWithFeatureTrue);
-		splitList.add(membersWithFeatureEqualTwo); 
-		splitList.add(membersWithFeatureEqualThree);
+		if (membersWithFeatureFalse.size() != 0) splitList.add(membersWithFeatureFalse);
+		if (membersWithFeatureTrue.size() != 0) splitList.add(membersWithFeatureTrue);
+		if (membersWithFeatureEqualTwo.size() != 0) splitList.add(membersWithFeatureEqualTwo); 
+		if (membersWithFeatureEqualThree.size() != 0) splitList.add(membersWithFeatureEqualThree);
 		
 		for (List<HashMap<Integer, Integer>> l : splitList)
 			for (HashMap<Integer, Integer> h : l) 
@@ -113,44 +113,69 @@ public class Sample {
 		double informationGain = 0.0;
 		double entropyBeforeSplit = 0.0;
 		double entropyAfterSplit = 0.0;
-		List<HashMap<Integer, Integer>> trueSamples = new ArrayList<HashMap<Integer, Integer>>();
-		List<HashMap<Integer, Integer>> falseSamples = new ArrayList<HashMap<Integer, Integer>>();
-		
-		List<HashMap<Integer, Integer>> sl = new ArrayList<>(sampleList);
-		
-		for (HashMap<Integer, Integer> sample : sl) {
-			if (sample.get(0) == 0) falseSamples.add(sample);
-			else if (sample.get(0) == 1) trueSamples.add(sample);
-		}
-		
-		List<List<HashMap<Integer, Integer>>> sampleBeforeSplit = new ArrayList<List<HashMap<Integer, Integer>>>();
-		sampleBeforeSplit.add(falseSamples);
-		sampleBeforeSplit.add(trueSamples);
-		entropyBeforeSplit = informationEntropy(sampleBeforeSplit);
-		
-		List<List<HashMap<Integer, Integer>>> sampleAfterSplit = split(sl, feature);
-		entropyAfterSplit = informationEntropy(sampleAfterSplit);
 	
-		informationGain = entropyAfterSplit - entropyBeforeSplit;
+		List<List<HashMap<Integer, Integer>>> listBeforeSplit = new ArrayList<List<HashMap<Integer, Integer>>>();
+		listBeforeSplit.add(sampleList);
+		entropyBeforeSplit = informationEntropy(listBeforeSplit);
 		
+		List<List<HashMap<Integer, Integer>>> listAfterSplit = split(sampleList, feature);
+		entropyAfterSplit = informationEntropy(listAfterSplit);
+		
+		informationGain = entropyBeforeSplit - entropyAfterSplit;
 		return informationGain;
 	}
 	
 	public double informationEntropy(List<List<HashMap<Integer, Integer>>> sampleList) {
+		
+		// ASSUMPTION: classifier is within the maps as key=0, via the project description
 		double entropy = 0.0;
 		
-		int totalData = 0;
+		int totalSize = 0;
 		for (List<HashMap<Integer, Integer>> list : sampleList) {
-			totalData += list.size();
+			totalSize += list.size();
 		}
 		
 		for (List<HashMap<Integer, Integer>> list : sampleList) {
-			double prob = (double)(list.size())/totalData;
-			if (prob == 0.0) entropy += 0.0;
-			else entropy += prob * Math.log10(prob) / Math.log10(2);
+			int numTrue = 0; 
+			int numFalse = 0;
+			
+			for (HashMap<Integer, Integer> h : list) {
+				if (h.get(0) == 0) numFalse++;
+				else if (h.get(0) == 1) numTrue++;
+			}
+			
+			double normProb = (double)list.size() / totalSize;
+			double trueProb = (double)numTrue/list.size();
+			double falseProb = (double)numFalse/list.size();
+			
+			// need to make sure we only calculate if the log is defined for our probs
+			if (trueProb == 0 || Double.isNaN(trueProb)) {
+				if (falseProb == 0 || Double.isNaN(falseProb)) entropy += 0.0;
+				else entropy += normProb * -falseProb*Math.log10(falseProb)/Math.log10(2);
+			}
+			else if (falseProb == 0 || Double.isNaN(falseProb)) entropy += normProb * -trueProb*Math.log10(trueProb)/Math.log10(2);
+			else entropy += normProb * (-trueProb*Math.log10(trueProb)/Math.log10(2) - falseProb*Math.log10(falseProb)/Math.log10(2));
+			
+//			double prob = (double)(list.size())/totalData;
+//			if (prob == 0.0) entropy += 0.0;
+//			else entropy += (-1)(prob * Math.log10(prob) / Math.log10(2));
 		}
 
-		return entropy * (-1);
+		return entropy;
 	}
 	
+	public int bestFeature(List<HashMap<Integer, Integer>> data, List<Integer> features) {
+		int bestFeature = 1;
+		double bestIG = 0.0;
+		for (int i : features) {
+			double ig = informationGainOnSplit(data, i);
+			if (ig > bestIG) {
+				bestIG = ig;
+				bestFeature = i;
+			}
+		}
+		return bestFeature;
+	}
+
+
 }
