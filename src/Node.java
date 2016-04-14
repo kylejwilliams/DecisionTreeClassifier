@@ -23,7 +23,7 @@ public class Node<T> {
 	}
 
 	public void addChild(Node<T> child) {
-		child.parent = parent;
+		child.parent = this;
 		this.children.add(child);
 	}
 
@@ -33,11 +33,12 @@ public class Node<T> {
 	
 	public void printPreorder(Node<List<HashMap<Integer, Integer>>> root) {
 		if (root == null) {
+			System.out.println("reached a leaf");
 			return;
 		}
-		System.out.println(root.data);
+		System.out.println("split attribute: " + root.parentAttribute + " root: " + root + " parent: " + root.parent);
 		for (Node<List<HashMap<Integer, Integer>>> n : root.getChildren())
 			printPreorder(n);
-		System.out.println("");
+		//System.out.println();
 	}
 }

@@ -13,20 +13,24 @@ public class DecisionTreeClassifier {
 	public Node<List<HashMap<Integer, Integer>>> buildTree(
 			List<HashMap<Integer, Integer>> data, int targetAttribute,
 			ArrayList<Integer> attributes) {
-		Node<List<HashMap<Integer, Integer>>> root = new Node<List<HashMap<Integer, Integer>>>(data);
+		
+		List<HashMap<Integer, Integer>> dataCopy = new ArrayList<HashMap<Integer, Integer>>(data.size());
+		for (HashMap<Integer, Integer> h : data)
+			dataCopy.add((HashMap<Integer, Integer>)h.clone());
+		Node<List<HashMap<Integer, Integer>>> root = new Node<List<HashMap<Integer, Integer>>>(dataCopy);
 
 		int numFalse = 0;
 		int numTrue = 0;
-		for (HashMap<Integer, Integer> h : data) {
+		for (HashMap<Integer, Integer> h : dataCopy) {
 			if (h.get(targetAttribute) == 0)
 				numFalse++;
 			else if (h.get(targetAttribute) == 1)
 				numTrue++;
 		}
-		if (numFalse == data.size()) {
+		if (numFalse == dataCopy.size()) {
 			root.label = false;
 			return root;
-		} else if (numTrue == data.size()) {
+		} else if (numTrue == dataCopy.size()) {
 			root.label = true;
 			return root;
 		}
@@ -40,14 +44,15 @@ public class DecisionTreeClassifier {
 				return root;
 			}
 		}
-		int bestClassifier = sample.bestFeature(data, attributes);
+		int bestClassifier = sample.bestFeature(dataCopy, attributes);
 		root.parentAttribute = bestClassifier;
 
 		List<List<HashMap<Integer, Integer>>> children = new ArrayList<List<HashMap<Integer, Integer>>>();
-		children = sample.split(data, bestClassifier);
+		children = sample.split(dataCopy, bestClassifier);
 		for (List<HashMap<Integer, Integer>> child : children) {
 			Node<List<HashMap<Integer, Integer>>> node;
 			node = new Node<List<HashMap<Integer, Integer>>>(child, root);
+			root.addChild(node);
 
 			if (node.data.isEmpty()) {
 				int nt = 0;
@@ -71,9 +76,9 @@ public class DecisionTreeClassifier {
 				ArrayList<Integer> newAttributes = new ArrayList<>();
 				for (Integer key : node.data.get(0).keySet()) {
 					newAttributes.add(key);
-					newAttributes.remove(0);
-				}
 					
+				}
+				newAttributes.remove(0);
 
 				n = buildTree(node.data, targetAttribute, newAttributes);
 				node.addChild(n);
