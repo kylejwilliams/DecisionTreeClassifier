@@ -32,13 +32,17 @@ public class Node<T> {
 	}
 	
 	public void printPreorder(Node<List<HashMap<Integer, Integer>>> root) {
-		if (root == null) {
-			System.out.println("reached a leaf");
-			return;
-		}
-		System.out.println("split attribute: " + root.parentAttribute + " root: " + root + " parent: " + root.parent);
+		System.out.println(prefix(root, "") + "node: " + root + " | data: " + root.data + " | split at: " + root.parentAttribute + " | classifier: " + root.label);
 		for (Node<List<HashMap<Integer, Integer>>> n : root.getChildren())
-			printPreorder(n);
-		//System.out.println();
+			printPreorder(n);	
+	}
+	
+	public String prefix(Node<List<HashMap<Integer, Integer>>> node, String prefix) {
+		if (node.parent == null)
+			return prefix;
+		else {
+			prefix += "----";
+			return prefix(node.parent, prefix);
+		}
 	}
 }

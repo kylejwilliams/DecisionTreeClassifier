@@ -164,7 +164,7 @@ public class Sample {
 		return entropy;
 	}
 	
-	public int bestFeature(List<HashMap<Integer, Integer>> data, List<Integer> features) {
+	public int bestFeatureForSplit(List<HashMap<Integer, Integer>> data, List<Integer> features) {
 		int bestFeature = 1;
 		double bestIG = 0.0;
 		for (int i : features) {
