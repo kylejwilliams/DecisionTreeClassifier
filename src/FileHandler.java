@@ -4,6 +4,10 @@ import java.util.List;
 import java.io.FileReader;
 import java.io.BufferedReader;
 
+/**
+ * @author kjwkc3
+ *
+ */
 public class FileHandler {
 	
 	String[] linesInFile = {};

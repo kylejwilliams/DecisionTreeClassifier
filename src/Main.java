@@ -2,7 +2,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -33,10 +32,13 @@ public class Main {
 			System.out.println("or 'exit' to close the program."); 
 			System.out.println("> ");
 			input = sc.next();
-			Sample data = new Sample(input, sample.numDecisionVariables);
-			dtc.queryTree(root, data);
-			data.displayData();
-		} while (input != "exit");
+			input += sc.nextLine();
+			if (!input.equals("exit") ) {
+				Sample data = new Sample(input, sample.numDecisionVariables);
+				System.out.println(dtc.queryTree(root, data));
+			}
+			
+		} while (!input.equals("exit"));
 		
 		sc.close();
 	}

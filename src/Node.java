@@ -6,10 +6,11 @@ public class Node<T> {
 	public T data = null;
 	public Node<T> parent = null;
 	public List<Node<T>> children = new ArrayList<Node<T>>();
-	public boolean label = false;
-	public int parentAttribute = 1;
+	public boolean classification;
+	public boolean label;
+	public int splitAttribute;
 
-	public Node(T data) {
+	Node(T data) {
 		this.data = data;
 	}
 
@@ -32,7 +33,7 @@ public class Node<T> {
 	}
 	
 	public void printPreorder(Node<List<HashMap<Integer, Integer>>> root) {
-		System.out.println(prefix(root, "") + "node: " + root + " | data: " + root.data + " | split at: " + root.parentAttribute + " | classifier: " + root.label);
+		System.out.println(prefix(root, "") + "node: " + root + " | data: " + root.data + " | split at: " + root.splitAttribute + " | classifier: " + root.classification);
 		for (Node<List<HashMap<Integer, Integer>>> n : root.getChildren())
 			printPreorder(n);	
 	}

@@ -28,31 +28,30 @@ public class DecisionTreeClassifier {
 				numTrue++;
 		}
 		if (numFalse == dataCopy.size()) {
-			root.label = false;
+			root.classification = false;
 			return root;
 		} else if (numTrue == dataCopy.size()) {
-			root.label = true;
+			root.classification = true;
 			return root;
 		}
 
 		if (attributes.size() == 0) {
 			if (numFalse > numTrue) {
-				root.label = false;
+				root.classification = false;
 				return root;
 			} else {
-				root.label = true;
+				root.classification = true;
 				return root;
 			}
 		}
 		int bestClassifier = sample.bestFeatureForSplit(dataCopy, attributes);
-		root.parentAttribute = bestClassifier;
+		root.splitAttribute = bestClassifier;
 
 		List<List<HashMap<Integer, Integer>>> children = new ArrayList<List<HashMap<Integer, Integer>>>();
 		children = sample.split(dataCopy, bestClassifier);
 		for (List<HashMap<Integer, Integer>> child : children) {
 			Node<List<HashMap<Integer, Integer>>> node;
 			node = new Node<List<HashMap<Integer, Integer>>>(child, root);
-			//root.addChild(node);
 
 			if (node.data.isEmpty()) {
 				int nt = 0;
@@ -66,9 +65,9 @@ public class DecisionTreeClassifier {
 				//Node<List<HashMap<Integer, Integer>>> n = new Node<List<HashMap<Integer, Integer>>>(child);
 
 				if (nt > nf)
-					node.label = true;
+					node.classification = true;
 				else
-					node.label = false;
+					node.classification = false;
 				root.addChild(node);
 			} else {
 				//Node<List<HashMap<Integer, Integer>>> n = new Node<List<HashMap<Integer, Integer>>>(child);
@@ -88,8 +87,18 @@ public class DecisionTreeClassifier {
 		return root;
 	}
 	
-	public void queryTree(Node<List<HashMap<Integer, Integer>>> root, Sample data) {
+	public boolean queryTree(Node<List<HashMap<Integer, Integer>>> root, Sample data) {
+		int curAttribute = root.splitAttribute;
+		if (curAttribute == 0) return root.classification;
 		
+		
+		int index = data.data.get(0).get(curAttribute);
+		
+		List<List<HashMap<Integer, Integer>>> newData = data.split(data.data, curAttribute); 
+		Sample s = new Sample(data.data);
+		
+		
+		return queryTree(root.getChildren().get(index), data);
 	}
 }
 

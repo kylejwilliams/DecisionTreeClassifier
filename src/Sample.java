@@ -23,22 +23,18 @@ public class Sample {
 	int totalData = 0;
 	
 	public Sample(String data, int numDecisionVariables) {
-		String[] d = new String[1];
-		d[0] = data;
-		fileData = d;
+		String[] d = data.split(" ");
+		
 		this.numDecisionVariables = numDecisionVariables;
 		totalData = 1;
 		
 		HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
 		
-		for (int j = 0; j < numDecisionVariables; j++) {
-			int dataValue = 0;
-			dataValue = Integer.valueOf(fh.getWordAt(curLine, j));
-			if (j == numDecisionVariables - 1) h.put(0, dataValue);
-			else h.put(j + 1, dataValue);
+		for (int i = 0; i < d.length; i++) {
+			h.put(i+1, Integer.valueOf(d[i]));
 		}
 		
-		data.add(h);
+		this.data.add(h);
 	}
 	
 	public Sample(FileHandler fh) {
@@ -62,7 +58,13 @@ public class Sample {
 		
 		createData();
 	}
-	
+
+	public Sample(List<HashMap<Integer, Integer>> data) {
+		this.data = data;
+		numDecisionVariables = data.get(0).size();
+		int totalData = data.size();
+	}
+		
 	public void createData() {
 		for (int i = 0; i < totalData; i++) { // elem 1 is first instance of actual data
 			HashMap<Integer, Integer> m = new HashMap<Integer, Integer>();
@@ -121,9 +123,9 @@ public class Sample {
 		if (membersWithFeatureEqualTwo.size() != 0) splitList.add(membersWithFeatureEqualTwo); 
 		if (membersWithFeatureEqualThree.size() != 0) splitList.add(membersWithFeatureEqualThree);
 		
-		for (List<HashMap<Integer, Integer>> l : splitList)
-			for (HashMap<Integer, Integer> h : l) 
-				h.remove(feature);
+//		for (List<HashMap<Integer, Integer>> l : splitList)
+//			for (HashMap<Integer, Integer> h : l) 
+//				h.remove(feature);
 			
 		return splitList;
 	}
