@@ -87,6 +87,10 @@ public class DecisionTreeClassifier {
 
 		return root;
 	}
+	
+	public void queryTree(Node<List<HashMap<Integer, Integer>>> root, Sample data) {
+		
+	}
 }
 
 	// ID3 (Examples, Target_Attribute, Attributes)

@@ -22,6 +22,25 @@ public class Sample {
 	int numDecisionVariables = 0;
 	int totalData = 0;
 	
+	public Sample(String data, int numDecisionVariables) {
+		String[] d = new String[1];
+		d[0] = data;
+		fileData = d;
+		this.numDecisionVariables = numDecisionVariables;
+		totalData = 1;
+		
+		HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
+		
+		for (int j = 0; j < numDecisionVariables; j++) {
+			int dataValue = 0;
+			dataValue = Integer.valueOf(fh.getWordAt(curLine, j));
+			if (j == numDecisionVariables - 1) h.put(0, dataValue);
+			else h.put(j + 1, dataValue);
+		}
+		
+		data.add(h);
+	}
+	
 	public Sample(FileHandler fh) {
 		this.fh = fh;
 		fileData = fh.linesInFile;

@@ -9,6 +9,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+		String input = "";
 		String filename = "";
 		
 		System.out.println("Enter a filename or path");
@@ -26,6 +27,16 @@ public class Main {
 		
 		Node<List<HashMap<Integer, Integer>>> root = dtc.buildTree(sample.data, 0, attributes);
 		root.printPreorder(root);
+		
+		do {
+			System.out.println("enter a space-separated string of data to query the decision tree (ex. '1 0 0 0 1 1 0 1')");
+			System.out.println("or 'exit' to close the program."); 
+			System.out.println("> ");
+			input = sc.next();
+			Sample data = new Sample(input, sample.numDecisionVariables);
+			dtc.queryTree(root, data);
+			data.displayData();
+		} while (input != "exit");
 		
 		sc.close();
 	}
